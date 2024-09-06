@@ -33,3 +33,11 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
+
+# admin_view.py
+from django.contrib.auth.decorators import user_passes_test
+
+@user_passes_test(lambda user: user.profile.role == 'Admin')
+def admin_view(request):
+    # Admin-specific content here
+    return render(request, 'admin_template.html')
