@@ -13,7 +13,7 @@ from .models import Library
 
 class LibraryDetailView(DetailView):
   model = Library  # Specify the model for the view
-  template_name = 'library_detail.html'  # Set the template for rendering
+  template_name = 'relationship_app/library_detail.html'  # Set the template for rendering
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
