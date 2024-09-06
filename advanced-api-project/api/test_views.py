@@ -6,7 +6,7 @@ from .serializers import BookSerializer
 
 class BookAPITests(APITestCase):
     def setUp(self):
-        self.client = APIClient()
+        self.client.login = APIClient()
         
         # Create an Author instance
         self.author = Author.objects.create(name='Test Author')
@@ -30,6 +30,7 @@ class BookAPITests(APITestCase):
         response = self.client.get(self.book_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], self.book_data['title'])
+        
 
     def test_update_book(self):
         update_data = {'title': 'Updated Book Title'}
