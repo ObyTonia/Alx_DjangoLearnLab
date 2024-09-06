@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions
 from .models import Book
 from .serializers import BookSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 
 class BookListView(generics.ListCreateAPIView):
@@ -12,7 +13,7 @@ class BookListView(generics.ListCreateAPIView):
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]  # Allow any user to view the list
+    permission_classes = [IsAuthenticatedOrReadOnly] 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     """ Retrieve, update, or delete a book by ID.
@@ -24,12 +25,15 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
 
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
 
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
