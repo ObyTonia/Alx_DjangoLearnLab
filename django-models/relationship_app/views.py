@@ -8,7 +8,8 @@ def list_books(request):
   context = {'books': books}  # Create a context dictionary
   return render(request, 'relationship_app/list_books.html', context)  # Render template with context
 
-from django.views.generic import DetailView
+
+from django.views.generic.detail import DetailView
 from .models import Library
 
 class LibraryDetailView(DetailView):
