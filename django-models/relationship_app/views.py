@@ -15,3 +15,21 @@ from .models import Library
 class LibraryDetailView(DetailView):
   model = Library  # Specify the model for the view
   template_name = 'relationship_app/library_detail.html'  # Set the template for rendering
+
+#customization
+from django.shortcuts import render, redirect
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+
+# Custom registration view
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Automatically log in the user after registration
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
