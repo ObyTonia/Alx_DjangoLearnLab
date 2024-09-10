@@ -9,3 +9,36 @@
   {% endif %}
   <a href="{% url 'post_list' %}">Back to list</a>
 {% endblock %}
+
+
+<!-- Comment form  -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+<h2>Comments</h2>
+{% for comment in comments %}
+    <div>
+        <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+        {% if comment.author == user %}
+            <a href="{% url 'edit_comment' comment.id %}">Edit</a> |
+            <a href="{% url 'delete_comment' comment.id %}">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No comments yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <h2>Add a Comment</h2>
+    <form method="post" action="{% url 'add_comment' post.id %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Submit Comment</button>
+    </form>
+{% else %}
+    <p>You must be logged in to add a comment.</p>
+{% endif %}
+{% endblock %}
