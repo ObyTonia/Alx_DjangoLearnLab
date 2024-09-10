@@ -106,7 +106,7 @@ class PostDetailView(DetailView):
         context['comment_form'] = CommentForm()
         context['comments'] = self.object.comments.all()
         return context
-
+"CommentCreateView"
 @login_required
 def add_comment(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -120,6 +120,7 @@ def add_comment(request, post_id):
             return redirect(reverse('post_detail', args=[post_id]))
     return redirect(reverse('post_detail', args=[post_id]))
 
+"CommentUpdateView"
 @login_required
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
@@ -134,6 +135,7 @@ def edit_comment(request, comment_id):
         form = CommentForm(instance=comment)
     return render(request, 'blog/edit_comment.html', {'form': form})
 
+"CommentDeleteView"
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
