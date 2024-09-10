@@ -1,0 +1,22 @@
+## Blog Post Management
+
+### Features
+- **Create**: Authenticated users can create new blog posts.
+- **Read**: All users can view a list of posts and details of individual posts.
+- **Update**: Only the author of a post can edit their post.
+- **Delete**: Only the author of a post can delete their post.
+
+### URL Patterns
+- `/` - List all posts.
+- `/post/<int:pk>/` - View post details.
+- `/post/new/` - Create a new post.
+- `/post/<int:pk>/edit/` - Edit an existing post.
+- `/post/<int:pk>/delete/` - Delete a post.
+
+### Permissions
+- Users must be logged in to create, edit, or delete posts.
+- Only the post's author can edit or delete the post.
+
+### Testing
+- Verify that CRUD operations work as expected.
+- Check that permissions are enforced correctly.
