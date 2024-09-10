@@ -89,58 +89,80 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
     
-    # CRUD operations for comments
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment
+                # CRUD operations for comments
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404
+from .models import Comment, Post
 from .forms import CommentForm
 
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'blog/post_detail.html'
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['comment_form'] = CommentForm()
-        context['comments'] = self.object.comments.all()
-        return context
-"CommentCreateView"
-@login_required
-def add_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect(reverse('post_detail', args=[post_id]))
-    return redirect(reverse('post_detail', args=[post_id]))
+    def form_valid(self, form):
+        post = get_object_or_404(Post,
+    pk=self.kwargs['post_pk'])
+        form.instance.post = post
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-"CommentUpdateView"
-@login_required
-def edit_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    if request.user != comment.author:
-        return redirect('post_detail', pk=comment.post.pk)
-    if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('post_detail', args=[comment.post.id]))
-    else:
-        form = CommentForm(instance=comment)
-    return render(request, 'blog/edit_comment.html', {'form': form})
+class CommentUpdateView(UpdateView):
+    model = Comment
+    form_class = CommentForm
 
-"CommentDeleteView"
-@login_required
-def delete_comment(request, comment_id):
-    comment = get_object_or_404(Comment, id=comment_id)
-    if request.user == comment.author:
-        post_id = comment.post.id
-        comment.delete()
-        return redirect(reverse('post_detail', args=[post_id]))
-    return redirect('post_detail', pk=comment.post.pk)
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+# class PostDetailView(DetailView):
+#     model = Post
+#     template_name = 'blog/post_detail.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['comment_form'] = CommentForm()
+#         context['comments'] = self.object.comments.all()
+#         return context
+# "CommentCreateView"
+# @login_required
+# def add_comment(request, post_id):
+#     post = get_object_or_404(Post, id=post_id)
+#     if request.method == 'POST':
+#         form = CommentForm(request.POST)
+#         if form.is_valid():
+#             comment = form.save(commit=False)
+#             comment.post = post
+#             comment.author = request.user
+#             comment.save()
+#             return redirect(reverse('post_detail', args=[post_id]))
+#     return redirect(reverse('post_detail', args=[post_id]))
+
+# "CommentUpdateView"
+# @login_required
+# def edit_comment(request, comment_id):
+#     comment = get_object_or_404(Comment, id=comment_id)
+#     if request.user != comment.author:
+#         return redirect('post_detail', pk=comment.post.pk)
+#     if request.method == 'POST':
+#         form = CommentForm(request.POST, instance=comment)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(reverse('post_detail', args=[comment.post.id]))
+#     else:
+#         form = CommentForm(instance=comment)
+#     return render(request, 'blog/edit_comment.html', {'form': form})
+
+# "CommentDeleteView"
+# @login_required
+# def delete_comment(request, comment_id):
+#     comment = get_object_or_404(Comment, id=comment_id)
+#     if request.user == comment.author:
+#         post_id = comment.post.id
+#         comment.delete()
+#         return redirect(reverse('post_detail', args=[post_id]))
+#     return redirect('post_detail', pk=comment.post.pk)
