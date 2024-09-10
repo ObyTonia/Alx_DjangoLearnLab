@@ -11,3 +11,8 @@
     {% endfor %}
   </ul>
 {% endblock %}
+
+"TEMPLATE TO INCLUDE SEARCH FORM"
+{% for tag in post.tags.all %}
+    <a href="{% url 'tag_posts' tag.name %}">{{ tag }}</a>
+{% endfor %}

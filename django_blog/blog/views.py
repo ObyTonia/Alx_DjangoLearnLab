@@ -118,6 +118,25 @@ class CommentDeleteView(DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+    
+    "SEARCH VIEW"
+# blog/views.py
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Post
+
+def search_posts(request):
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    else:
+        posts = Post.objects.none()
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
 
 # class PostDetailView(DetailView):
 #     model = Post
