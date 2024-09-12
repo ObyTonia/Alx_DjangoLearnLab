@@ -55,22 +55,3 @@ class Librarian(models.Model):
 
     def __str__(self):
         return self.name
-    
-"ROLEBASED SETUP"
-from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render, redirect
-
-@user_passes_test(lambda user: user.profile.role == 'Admin')
-def admin_view(request):
-    # Admin-specific content here
-    return render(request, 'admin_view.html')
-
-@user_passes_test(lambda user: user.profile.role == 'Librarian')
-def librarian_view(request):
-    # Librarian-specific content here
-    return render(request, 'librarian_view.html')
-
-@user_passes_test(lambda user: user.profile.role == 'Member')
-def member_view(request):
-    # Member-specific content here
-    return render(request, 'member_view.html')
