@@ -56,14 +56,3 @@ class Post(models.Model):
     content = models.TextField()
     tags = TaggableManager()
 
-from django.views.generic import ListView
-from .models import Post
-from taggit.models import Tag
-
-class PostByTagListView(ListView):
-    model = Post
-    template_name = 'blog/post_list_by_tag.html'
-    context_object_name = 'posts'
-
-    def get_queryset(self):
-        return Post.objects.filter(tags__slug=self.kwargs.get('tag_slug'))
