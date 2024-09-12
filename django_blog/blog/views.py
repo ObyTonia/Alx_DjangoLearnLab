@@ -137,7 +137,18 @@ def search_posts(request):
         posts = Post.objects.none()
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
 
+"VIEW TO DISPLAY POST BY TAG"
 
+from django.views.generic import ListView
+from .models import Post
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list_by_tag.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs.get('tag_slug'))
 # class PostDetailView(DetailView):
 #     model = Post
 #     template_name = 'blog/post_detail.html'

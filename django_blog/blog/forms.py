@@ -49,3 +49,5 @@ class PostForm(forms.ModelForm):
         tags = self.cleaned_data['tags']
         tag_list = [Tag.objects.get_or_create(name=tag.strip())[0] for tag in tags.split(',')]
         return tag_list
+    
+    
