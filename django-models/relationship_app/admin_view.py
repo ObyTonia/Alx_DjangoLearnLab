@@ -10,4 +10,4 @@ def is_admin(user):
 @user_passes_test(lambda user: user.profile.role == 'Admin')
 def admin_view(request):
     # Admin-specific content here
-    return render(request, 'relationship/admin_view.html')
+    return render(request, 'relationship_app/admin_view.html')
