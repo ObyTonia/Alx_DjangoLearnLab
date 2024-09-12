@@ -8,4 +8,4 @@ def is_member(user):
 
 @user_passes_test(is_member)
 def member_view(request):
-    return render(request, 'member_template.html')
+    return render(request, 'relationship/member_view.html')
