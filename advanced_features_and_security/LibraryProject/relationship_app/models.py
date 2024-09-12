@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings
+from bookshelf.models import CustomUser
 
 class UserProfile(models.Model):
     USER_ROLES = (
@@ -14,7 +14,7 @@ class UserProfile(models.Model):
         ('Member', 'Member'),
     )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=USER_ROLES, default='Member')
 
     def __str__(self):

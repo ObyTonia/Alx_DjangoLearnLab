@@ -26,6 +26,7 @@ class CustomUser(AbstractUser):
 from django.contrib.auth.base_user import BaseUserManager
 
 class CustomUserManager(BaseUserManager):
+    model = CustomUser
     def create_user(self, username, email, password=None, **extra_fields):
         if not username:
             raise ValueError('The username is required')
