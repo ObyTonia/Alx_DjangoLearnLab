@@ -4,14 +4,10 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 
 # Check if the user has the 'Admin' role
-# def Admin(user):
-#     return user.userprofile.role == 'Admin'
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
 
 @user_passes_test(lambda user: user.profile.role == 'Admin')
 def admin_view(request):
     # Admin-specific content here
-    # Admin-specific content here
-    context = {
-        'message': 'This is the admin view. Only admins can access this.'
-    }
-    return render(request, 'admin_view.html', context)
+    return render(request, 'relationship/admin_view.html')
