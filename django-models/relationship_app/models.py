@@ -28,6 +28,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
     
+"BOOKSHELF"
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
