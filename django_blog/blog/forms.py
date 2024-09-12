@@ -34,26 +34,18 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
     
     # POST FORM UPDATE TO INCLUDE TAG
-from taggit.forms import TagField
+from taggit.forms import TagWidget
+from .models import Post, Tag
 
 class PostForm(forms.ModelForm):
-    tags = TagField()
-
+    tags = forms.CharField(max_length=255, required=False, widget=TagWidget())
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
-
-# from django import forms
-# from .models import Post, Tag
-
-# class PostForm(forms.ModelForm):
-#     tags = forms.CharField(max_length=255)
-
-#     class Meta:
-#         model = Post
-#         fields = ['title', 'content', 'tags']
-
-#     def clean_tags(self):
-#         tags = self.cleaned_data['tags']
-#         tag_list = [Tag.objects.get_or_create(name=tag.strip())[0] for tag in tags.split(',')]
-#         return tag_list
+        widgets = {
+            'tags': TagWidget(),  # Custom widget for tags
+        }
+    def clean_tags(self):
+        tags = self.cleaned_data['tags']
+        tag_list = [Tag.objects.get_or_create(name=tag.strip())[0] for tag in tags.split(',')]
+        return tag_list
