@@ -77,3 +77,7 @@ def delete_book(request, book_id):
     # Delete book logic here
     return redirect('/books/')  # Redirect to book list after deletion
 
+
+
+
+

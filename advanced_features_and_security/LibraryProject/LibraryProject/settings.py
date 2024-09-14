@@ -23,9 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)ooe$&c1t-zi=(@n@^_vtr5m4y0vfc3=ykwno0_ie2$urb10^+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
+
+SECURE_BROWSER_XSS_FILTER = True   #enables browser-side XSS filtering.
+X_FRAME_OPTIONS = 'DENY' #prevents clickjacking attacks.
+SECURE_CONTENT_TYPE_NOSNIFF = True #prevents the browser from guessing the content type, mitigating MIME sniffing vulnerabilities.
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 

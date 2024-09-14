@@ -32,3 +32,12 @@ def book_delete(request, book_id):
         book.delete()
         return redirect('book_list')
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
+
+
+# SAFE: using parameterized queries via ORM
+from django.db.models import Q
+
+def search_books(request):
+    query = request.GET.get('query', '')
+    books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
+    return render(request, 'bookshelf/book_list.html', {'books': books})
