@@ -35,6 +35,8 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 "Create and Configure Groups with Assigned Permissions"
 
+
+
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from .models import Book
