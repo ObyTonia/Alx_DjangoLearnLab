@@ -44,6 +44,9 @@ SECURE_HSTS_PRELOAD = True
 # Enforce secure SSL redirection
 SECURE_SSL_REDIRECT = True
 
+#ensure secure headers are properly implemented
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
