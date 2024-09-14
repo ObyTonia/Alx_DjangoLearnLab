@@ -44,14 +44,14 @@ def search_books(request):
 
 "Validate and sanitize inputs:"
 
-from .forms import BookForm
+from .forms import ExampleForm
 
 def create_book(request):
     if request.method == "POST":
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('book_list')
     else:
-        form = BookForm()
+        form = ExampleForm()
     return render(request, 'bookshelf/example_form.html', {'form': form})
