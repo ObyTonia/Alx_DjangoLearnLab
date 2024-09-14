@@ -27,9 +27,23 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
-SECURE_BROWSER_XSS_FILTER = True   #enables browser-side XSS filtering.
-X_FRAME_OPTIONS = 'DENY' #prevents clickjacking attacks.
-SECURE_CONTENT_TYPE_NOSNIFF = True #prevents the browser from guessing the content type, mitigating MIME sniffing vulnerabilities.
+# Add security headers to prevent certain attacks
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'  # Prevents your site from being embedded in an iframe
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME type confusion attacks
+
+# Ensure cookies are sent securely
+CSRF_COOKIE_SECURE = True  # CSRF cookies are only sent via HTTPS
+SESSION_COOKIE_SECURE = True  # Session cookies are only sent via HTTPS
+
+# Ensure that HSTS is enabled to enforce HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year, set in production
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Enforce secure SSL redirection
+SECURE_SSL_REDIRECT = True
+
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
