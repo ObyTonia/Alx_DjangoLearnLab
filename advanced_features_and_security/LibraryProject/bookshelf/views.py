@@ -54,4 +54,4 @@ def create_book(request):
             return redirect('book_list')
     else:
         form = BookForm()
-    return render(request, 'bookshelf/form_example.html', {'form': form})
+    return render(request, 'bookshelf/example_form.html', {'form': form})
