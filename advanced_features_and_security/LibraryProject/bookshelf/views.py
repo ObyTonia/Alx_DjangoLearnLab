@@ -41,3 +41,17 @@ def search_books(request):
     query = request.GET.get('query', '')
     books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
     return render(request, 'bookshelf/book_list.html', {'books': books})
+
+"Validate and sanitize inputs:"
+
+from .forms import BookForm
+
+def create_book(request):
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')
+    else:
+        form = BookForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
