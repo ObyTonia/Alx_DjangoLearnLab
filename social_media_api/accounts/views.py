@@ -30,9 +30,9 @@ class CustomAuthToken(ObtainAuthToken):
 
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 User = get_user_model()
 
@@ -41,10 +41,13 @@ User = get_user_model()
 def follow_user(request, user_id):
     try:
         user_to_follow = User.objects.get(id=user_id)
-        request.user.following.add(user_to_follow)
-        return Response({'status': 'following'}, status=status.HTTP_200_OK)
+        if user_to_follow != request.user:
+            request.user.following.add(user_to_follow)
+            return Response({'status': 'followed'}, status=status.HTTP_200_OK)
+        return Response({'error': 'You cannot follow yourself'}, status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -55,6 +58,7 @@ def unfollow_user(request, user_id):
         return Response({'status': 'unfollowed'}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
 
 "Create a feed view in the posts app to retrieve posts from users that the current user follows"
 #feed view 
