@@ -29,30 +29,30 @@ class CustomAuthToken(ObtainAuthToken):
 
     " Views to allow users to follow and unfollow other users."
 
-
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import CustomUser
 
-class FollowUserView(APIView):
+class FollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()  # Use this for filtering users
 
     def post(self, request, user_id):
-        user_to_follow = get_object_or_404(CustomUser, id=user_id)
+        user_to_follow = get_object_or_404(self.get_queryset(), id=user_id)
         request.user.following.add(user_to_follow)
         return Response({"detail": "Followed successfully"}, status=status.HTTP_200_OK)
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    queryset = CustomUser.objects.all()  # Use this for filtering users
 
     def post(self, request, user_id):
-        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
+        user_to_unfollow = get_object_or_404(self.get_queryset(), id=user_id)
         request.user.following.remove(user_to_unfollow)
         return Response({"detail": "Unfollowed successfully"}, status=status.HTTP_200_OK)
-
+    
 
 "Create a feed view in the posts app to retrieve posts from users that the current user follows"
 #feed view 
