@@ -39,10 +39,17 @@ class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()  # Use this for filtering users
 
-    def post(self, request, user_id):
-        user_to_follow = get_object_or_404(self.get_queryset(), id=user_id)
-        request.user.following.add(user_to_follow)
-        return Response({"detail": "Followed successfully"}, status=status.HTTP_200_OK)
+    def get(self, request, *args, **kwargs):
+        # Get the users the current user is following
+        following_users = request.user.following.all()
+
+        # Retrieve posts authored by the followed users, ordered by creation date (most recent first)
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+
+        # Serialize the posts
+        serialized_posts = PostSerializer(posts, many=True)
+
+        return Response(serialized_posts.data)
 
 class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
