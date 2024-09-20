@@ -44,7 +44,7 @@ class FollowUserView(generics.GenericAPIView):
         following_users = request.user.following.all()
 
         # Retrieve posts authored by the followed users, ordered by creation date (most recent first)
-        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        posts = Post.objects.filter(author__in=following_users).order_by ('-created_at')
 
         # Serialize the posts
         serialized_posts = PostSerializer(posts, many=True)
