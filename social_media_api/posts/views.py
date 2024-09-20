@@ -43,3 +43,31 @@ class UserFeedView(generics.ListAPIView):
         posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serialized_posts = PostSerializer(posts, many=True)
         return Response(serialized_posts.data)
+    
+"Create Views for Liking and Unliking Posts:"
+# Add like_post and unlike_post views to handle post likes and unlikes:
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Post, Like
+
+@api_view(['POST'])
+def like_post(request, pk):
+    post = Post.objects.get(pk=pk)
+    user = request.user
+
+    # Check if the post is already liked by the user
+    if Like.objects.filter(user=user, post=post).exists():
+        return Response({'message': 'Post already liked'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Create a like
+    Like.objects.create(user=user, post=post)
+    create_notification(actor=user, recipient=post.user, verb='liked your post', target=post)
+
+    return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def unlike_post(request, pk):
+    post = Post.objects.get(pk=pk)
+    user = request.user
