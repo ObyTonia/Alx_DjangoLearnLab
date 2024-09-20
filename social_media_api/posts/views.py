@@ -25,3 +25,21 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+"Create a feed view in the posts app to retrieve posts from users that the current user follows"
+#feed view 
+from rest_framework import generics
+from rest_framework import permissions
+from .models import Post
+from .serializers import PostSerializer
+from rest_framework.response import Response
+
+class UserFeedView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        following_users = request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        serialized_posts = PostSerializer(posts, many=True)
+        return Response(serialized_posts.data)
