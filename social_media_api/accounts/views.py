@@ -36,7 +36,7 @@ from django.shortcuts import get_object_or_404
 from .models import CustomUser
 
 class FollowUserView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()  # Use this for filtering users
 
     def post(self, request, user_id):
@@ -45,7 +45,7 @@ class FollowUserView(generics.GenericAPIView):
         return Response({"detail": "Followed successfully"}, status=status.HTTP_200_OK)
 
 class UnfollowUserView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = CustomUser.objects.all()  # Use this for filtering users
 
     def post(self, request, user_id):
