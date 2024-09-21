@@ -43,6 +43,12 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
 
+# URL prefix for static files
+STATIC_URL = '/static/'
+
+# Absolute path to the directory where collectstatic will collect static files for deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Adjust as needed
+
 
 # Application definition
 
