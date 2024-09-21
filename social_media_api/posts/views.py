@@ -45,29 +45,28 @@ class UserFeedView(generics.ListAPIView):
         return Response(serialized_posts.data)
     
 "Create Views for Liking and Unliking Posts:"
-# Add like_post and unlike_post views to handle post likes and unlikes:
-
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
+# posts/views.py
+from rest_framework import generics
+from django.http import JsonResponse
 from .models import Post, Like
+from notifications.models import Notification
 
-@api_view(['POST'])
 def like_post(request, pk):
-    post = Post.objects.get(pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     user = request.user
+    if Like.objects.get_or_create(user=request.user, post=post).exists():
+        return JsonResponse({'error': 'You already liked this post.'}, status=400)
+    like = Like.objects.create(user=user, post=post)
+    # Create notification
+    Notification.objects.create(recipient=post.author, actor=user, verb='liked', target=post)
+    return JsonResponse({'message': 'Post liked.'}, status=200)
 
-    # Check if the post is already liked by the user
-    if Like.objects.filter(user=user, post=post).exists():
-        return Response({'message': 'Post already liked'}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Create a like
-    Like.objects.create(user=user, post=post)
-    create_notification(actor=user, recipient=post.user, verb='liked your post', target=post)
-
-    return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
-
-@api_view(['POST'])
 def unlike_post(request, pk):
-    post = Post.objects.get(pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
     user = request.user
+    like = Like.objects.filter(user=user, post=post)
+    if not like.exists():
+        return JsonResponse({'error': 'You have not liked this post.'}, status=400)
+    like.delete()
+    return JsonResponse({'message': 'Post unliked.'}, status=200)
